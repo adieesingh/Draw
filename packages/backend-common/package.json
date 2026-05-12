@@ -1,0 +1,23 @@
+{
+  "name": "@repo/backend-common",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build":"tsc -b"
+  },
+  "devDependencies":{
+      "@repo/typescript-config":"workspace:*"
+  },
+  "exports":{
+    "./jwt":"./dist/index.js"
+  }
+
+  ,
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module"
+
+}

@@ -3,7 +3,10 @@
   "version": "0.0.0",
   "private": true,
   "exports": {
-    "./*": "./src/*.tsx"
+    "./button": "./src/button.tsx",
+    "./head": "./src/head.tsx",
+    "./input": "./src/InputForm.tsx",
+    "./bottom": "./src/bottom.tsx"
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",
@@ -20,6 +23,7 @@
     "typescript": "5.9.2"
   },
   "dependencies": {
+    "next": "^16.2.5",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
   }
