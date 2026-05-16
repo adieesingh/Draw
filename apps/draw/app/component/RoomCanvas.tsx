@@ -11,6 +11,11 @@ export default function RoomCanvas({ roomId }: { roomId: string }) {
     );
     ws.onopen = () => {
       SetSocket(ws);
+      const data =JSON.stringify({
+        type:"join_room",
+        roomId
+      })
+      ws.send(data)
     };
   }, []);
 

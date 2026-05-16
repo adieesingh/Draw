@@ -14,8 +14,10 @@ export async function initDraw(
   roomId: string,
   socket: WebSocket,
 ) {
-  let existingShape: Shape[] = await getExistingShape(roomId);
+
   const ctx = canvas.getContext("2d");
+    let existingShape: Shape[] = await getExistingShape(roomId);
+      console.log(existingShape)
   if (!ctx) {
     return;
   }
@@ -23,7 +25,7 @@ export async function initDraw(
     const message = JSON.parse(event.data);
     if (message.type == "chat") {
       const parsedShape = JSON.parse(message.message);
-      existingShape.push(parsedShape);
+      existingShape?.push(parsedShape.shape);
       clearCanvas(canvas, existingShape, ctx);
     }
   };
@@ -57,6 +59,7 @@ export async function initDraw(
         message: JSON.stringify({
           shape,
         }),
+        roomId
       }),
     );
   });
@@ -82,7 +85,8 @@ function clearCanvas(
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = "rgba(0,0,0)";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
-  existingShape.map((item) => {
+ 
+   existingShape?.map((item) => {
     if (item.type == "rect") {
       ctx.strokeStyle = "rgba(255,255,255)";
       ctx.strokeRect(item.x, item.y, item.width, item.height);
@@ -92,9 +96,11 @@ function clearCanvas(
 
 async function getExistingShape(roomId: string) {
   const res = await axios.get(`${BACKEND_URL}/chats/${roomId}`);
+  console.log(res.data)
+  console.log(res.data.messages)
   const messages = res.data.messages;
-  const shapes = messages.map((x: { message: String }) => {
-    const messageData = JSON.stringify(messages);
+  const shapes = messages?.map((x: { message: String }) => {
+    const messageData = JSON.stringify(x.message);
     return messageData;
   });
   return shapes;

@@ -103,7 +103,7 @@ app.post('/room',middleware,async (req,res)=>{
   
     const response = await prismaClient.room.create({
         data:{
-            slug:parsedData.data.name,
+            slug:parsedData.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            data.name,
             adminId:userId
         }
     })
@@ -131,7 +131,7 @@ app.post('/room',middleware,async (req,res)=>{
 app.get('/chats/:roomId',async (req,res)=>{
 try {
     const roomId = Number(req.params.roomId);
-    const message = await prismaClient.chat.findMany({
+    const messages = await prismaClient.chat.findMany({
         where:{
             roomId:roomId
         },
@@ -140,13 +140,13 @@ try {
         },
         take:1000
     })
-    if(!message){
+    if(!messages){
         return res.status(404).json({
             message:"Data not insert"
         })
     }
     return res.status(200).json({
-        message:"Data inserted"
+        messages
     })
     
 } catch (error) {
