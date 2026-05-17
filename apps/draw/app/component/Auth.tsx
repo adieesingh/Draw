@@ -5,6 +5,8 @@ import { InputForm } from '@repo/ui/input';
 import {Bottom} from '@repo/ui/bottom';
 import { useState } from 'react';
 import axios from 'axios'
+import { useRouter } from 'next/navigation';
+
 
 interface AuthProps{
   isSignin:boolean
@@ -14,6 +16,7 @@ export default function Auth({ isSignin }: AuthProps) {
   const [name,setName]=useState("");
   const [username,setUsername]=useState("");
   const [password,setPassword]=useState("")
+  const router =useRouter();
   console.log(isSignin)
  async function handleSignup(){
   try {
@@ -28,6 +31,7 @@ export default function Auth({ isSignin }: AuthProps) {
     }
     if(response){
       alert("Signup")
+      router.push("room");
     }
   } catch (error:any) {
     console.log(error)
@@ -39,12 +43,17 @@ export default function Auth({ isSignin }: AuthProps) {
       const response = await axios.post("http://localhost:3002/signin",{
         username,
         password
+      },{
+        withCredentials:true
       })
       if(!response){
         alert("Not Signup")
       }
       if(response){
-        alert("Signin Succesfully")
+      alert("Signin Sucessfully")
+      router.push("/room")
+        
+        
       }
     } catch (error:any) {
       console.log(error)

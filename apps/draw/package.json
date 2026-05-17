@@ -9,7 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@repo/ui":"workspace:*",
+    "@repo/ui": "workspace:*",
     "axios": "^1.16.0",
     "next": "16.2.4",
     "react": "19.2.5",

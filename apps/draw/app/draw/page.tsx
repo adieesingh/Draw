@@ -17,7 +17,7 @@ export async function initDraw(
 
   const ctx = canvas.getContext("2d");
     let existingShape: Shape[] = await getExistingShape(roomId);
-      console.log(existingShape)
+     
   if (!ctx) {
     return;
   }
@@ -96,12 +96,12 @@ function clearCanvas(
 
 async function getExistingShape(roomId: string) {
   const res = await axios.get(`${BACKEND_URL}/chats/${roomId}`);
-  console.log(res.data)
-  console.log(res.data.messages)
   const messages = res.data.messages;
   const shapes = messages?.map((x: { message: String }) => {
     const messageData = JSON.stringify(x.message);
+   
     return messageData;
   });
+ 
   return shapes;
 }

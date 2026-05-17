@@ -8,8 +8,7 @@ export default function Canvas({roomId,socket}:{
     const canvasRef = useRef<HTMLCanvasElement>(null);
         useEffect(() => {
     if (canvasRef.current) {
-        console.log("i am in draw")
-        initDraw(canvasRef.current,roomId,socket)
+      initDraw(canvasRef.current,roomId,socket)
     
     }
   }, [canvasRef]);

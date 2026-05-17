@@ -1,30 +1,31 @@
 import { JWT_SECRET } from "@repo/backend-common/jwt";
-import { NextFunction, Request,Response } from "express";
-import jwt, { JwtPayload } from 'jsonwebtoken';
-interface decodeProps extends JwtPayload{
-    userId:string
+import { NextFunction, Request, Response } from "express";
+import jwt, { JwtPayload } from "jsonwebtoken";
+interface decodeProps extends JwtPayload {
+  userId: string;
 }
-export const middleware =(req:Request,res:Response,next:NextFunction)=>{
-        try {
-            const auth=req.header("authorization");
-            const authHeader= auth?.startsWith("Bearer ")?auth.substring(7):auth;
-            if(typeof authHeader !=="string"){
-                return res.status(411).json({
-                    message:"Auth should be valid"
-                })
-            }
-            const decode = jwt.verify(authHeader,JWT_SECRET) as decodeProps
-           if(decode){
-           
-          
-            (req as any).userId=decode.userId;
+export const middleware = (req: Request, res: Response, next: NextFunction) => {
+  try {
+    console.log(req.cookies.token);
+    const auth =req.cookies.token;
+    console.log(auth);
+    if (!auth) {
+      return res.json({
+        message: "Cookie not found",
+      });
+    }
 
-            next();
-           }
-        } catch (error) {
-           return res.status(500).json({
-            message:"Internal server down",
-            error:error
-           }) 
-        }
-}
+    console.log(auth);
+    const decode = jwt.verify(auth, JWT_SECRET);
+    console.log(decode);
+    if (decode) {
+      //@ts-ignore
+      req.userId = decode.userId;
+      next();
+    }
+  } catch (error) {
+    return res.status(411).json({
+      message: "Internal Server down",
+    });
+  }
+};
