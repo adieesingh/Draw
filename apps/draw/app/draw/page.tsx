@@ -14,10 +14,9 @@ export async function initDraw(
   roomId: string,
   socket: WebSocket,
 ) {
-
   const ctx = canvas.getContext("2d");
-    let existingShape: Shape[] = await getExistingShape(roomId);
-     
+  let existingShape: Shape[] = await getExistingShape(roomId);
+
   if (!ctx) {
     return;
   }
@@ -25,7 +24,8 @@ export async function initDraw(
     const message = JSON.parse(event.data);
     if (message.type == "chat") {
       const parsedShape = JSON.parse(message.message);
-      existingShape?.push(parsedShape.shape);
+      existingShape.push(parsedShape.shape);
+
       clearCanvas(canvas, existingShape, ctx);
     }
   };
@@ -52,6 +52,9 @@ export async function initDraw(
       height,
       width,
     };
+    if (!shape) {
+      return;
+    }
     existingShape.push(shape);
     socket.send(
       JSON.stringify({
@@ -59,7 +62,7 @@ export async function initDraw(
         message: JSON.stringify({
           shape,
         }),
-        roomId
+        roomId,
       }),
     );
   });
@@ -85,11 +88,12 @@ function clearCanvas(
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = "rgba(0,0,0)";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
- 
-   existingShape?.map((item) => {
-    if (item.type == "rect") {
+
+  existingShape.map((shape) => {
+    if (shape.type == "rect") {
       ctx.strokeStyle = "rgba(255,255,255)";
-      ctx.strokeRect(item.x, item.y, item.width, item.height);
+
+      ctx.strokeRect(shape.x, shape.y, shape.width, shape.height);
     }
   });
 }
@@ -97,11 +101,10 @@ function clearCanvas(
 async function getExistingShape(roomId: string) {
   const res = await axios.get(`${BACKEND_URL}/chats/${roomId}`);
   const messages = res.data.messages;
-  const shapes = messages?.map((x: { message: String }) => {
-    const messageData = JSON.stringify(x.message);
-   
-    return messageData;
+  const shapes = messages.map((x: { message: string }) => {
+    const messageData = JSON.parse(x.message);
+       return messageData.shape;
   });
- 
+
   return shapes;
 }
