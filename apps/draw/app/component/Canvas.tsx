@@ -26,12 +26,8 @@ export default function Canvas({roomId,socket}:{
 
     }
   }, [canvasRef]);
-  return <div className="h-screen overflow-hidden bg-white">
-      <canvas
-        ref={canvasRef}
-        height={600}
-        width={800}
-      ></canvas>
+  return <div className="h-screen overflow-hidden">
+      <canvas height={window.innerHeight} width={window.innerWidth} ref={canvasRef}></canvas>
       <TopBar selectedTool={selectedTool} setSelectedTool={setSelectedTool}></TopBar>
     </div>
 }
