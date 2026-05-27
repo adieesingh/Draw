@@ -31,7 +31,7 @@ export class Game {
   private clicked: boolean;
   private startX = 0;
   private startY = 0;
-  private selectedTool: Tool = "circle";
+  private selectedTool: Tool = "panTool";
 private scale :number =1;
 private panX :number =0;
 private panY :number =0;
@@ -70,7 +70,7 @@ private panY :number =0;
       }
     };
   }
-  setTool(tool: "circle" | "rect" | "pencil") {
+  setTool(tool: "circle" | "rect" | "pencil" |"panTool") {
     this.selectedTool = tool;
   }
   clearCanvas() {
@@ -78,7 +78,7 @@ private panY :number =0;
    this.ctx.clearRect(-this.panX/this.scale,-this.panY/this.scale,
     this.canvas.width/this.scale,this.canvas.height/this.scale);
 
-    this.ctx.fillStyle = "rgba(0,0,0)";
+    this.ctx.fillStyle = "rgba(18,18,18)";
     this.ctx.fillRect(-this.panX/this.scale,-this.panY/this.scale,
       // adjust the sclae 
       this.canvas.width/this.scale,
@@ -106,14 +106,14 @@ private panY :number =0;
       }
     });
   }
-  //@ts-ignore
-  mouseDownHandler = (e) => {
+
+  mouseDownHandler = (e:MouseEvent) => {
     this.clicked = true;
     this.startX = e.clientX;
     this.startY = e.clientY;
   };
-  //@ts-ignore
-  mouseWheelHandler =(e)=>{
+ 
+  mouseWheelHandler =(e:WheelEvent)=>{
     e.preventDefault();
       const scaleAmount = -e.deltaY/500;
       const newScale = this.scale*(1+scaleAmount);
@@ -128,8 +128,8 @@ private panY :number =0;
       this.scale=newScale;
       this.clearCanvas()
   }
-  //@ts-ignore
-  mouseUpHandler = (e) => {
+ 
+  mouseUpHandler = (e:MouseEvent) => {
     this.clicked = false;
     const width = (e.clientX - this.startX)/this.scale;
     const height = (e.clientY - this.startY)/this.scale;
@@ -159,6 +159,10 @@ private panY :number =0;
         endX: (e.clientX-this.panX)/this.scale,
         endY: (e.clientY-this.panY)/this.scale,
       };
+    } else if(selectedTool==="panTool"){
+      this.startX=e.clientX;
+      this.startY=e.clientY;
+
     }
 
     if (!shape) {
@@ -175,8 +179,8 @@ private panY :number =0;
       }),
     );
   };
-//@ts-ignore
-  mouseMoveHandler = (e) => {
+
+  mouseMoveHandler = (e:MouseEvent) => {
     if (this.clicked) {
       const width = (e.clientX - this.startX)/this.scale;
       const height = (e.clientY - this.startY)/this.scale;
@@ -187,8 +191,8 @@ private panY :number =0;
         this.ctx.strokeRect((this.startX-this.panX)/this.scale, (this.startY-this.panY)/this.scale, width, height);
       } else if (selectedTool == "circle") {
         const radius = Math.max(width, height) / 2;
-        const centerX = (this.startX-this.panX)/this.scale + radius;
-        const centerY =( this.startY -this.panY)/this.scale+ radius;
+        const centerX = ((this.startX-this.panX)/this.scale) + radius;
+        const centerY =(( this.startY -this.panY)/this.scale)+ radius;
         this.ctx.beginPath();
         this.ctx.arc(centerX, centerY, Math.abs(radius), 0, Math.PI * 2);
         this.ctx.stroke();
@@ -199,6 +203,14 @@ private panY :number =0;
         this.ctx.lineTo((e.clientX-this.panX)/this.scale, (e.clientY-this.panY)/this.scale);
         this.ctx.stroke();
       }
+    }else if(this.selectedTool=="panTool"){
+      const mouseX = e.clientX-this.startX;
+      const mouseY =e.clientY-this.startY;
+      this.panX+=mouseX/this.scale;
+      this.panY+=mouseY/this.scale;
+      this.clearCanvas()
+
+
     }
   };
   initMouseHandler() {
